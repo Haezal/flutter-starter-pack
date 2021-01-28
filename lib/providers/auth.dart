@@ -14,7 +14,6 @@ enum Status {
 }
 
 class AuthProvider with ChangeNotifier {
-
   AuthService authService = new AuthService();
 
   // initial declaration
@@ -47,23 +46,20 @@ class AuthProvider with ChangeNotifier {
       /// is depend your data response
       User authUser = User.fromJson(response['data']);
 
-      print(authUser.name);
-
       UserPreferences().saveUser(authUser);
 
       result = {
-        "success":true,
-        "message":response['message'],
-        "user":authUser,
+        "success": true,
+        "message": response['message'],
+        "user": authUser,
       };
-    }
-    else {
+    } else {
       _loggedInStatus = Status.NotLoggedIn;
       notifyListeners();
 
       result = {
-        "success":false,
-        "message":response['message'],
+        "success": false,
+        "message": response['message'],
       };
     }
 
