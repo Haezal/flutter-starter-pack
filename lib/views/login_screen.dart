@@ -15,6 +15,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = new GlobalKey<FormState>();
 
+  FocusNode _usernameFocusNode, _passwordFocusNode = new FocusNode();
+
   String _username, _password;
 
   @override
@@ -22,13 +24,19 @@ class _LoginScreenState extends State<LoginScreen> {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
     final usernameField = TextFormField(
+      focusNode: _usernameFocusNode,
       autofocus: false,
-      validator: validateEmail,
+      // validator: validateEmail,
+      validator: (value) => value.isEmpty ? "Please enter username" : null,
       onSaved: (value) => _username = value,
+      onFieldSubmitted: (String value) {
+        FocusScope.of(context).requestFocus(_passwordFocusNode);
+      },
       decoration: buildInputDecoration("Confirm password", Icons.person),
     );
 
     final passwordField = TextFormField(
+      focusNode: _passwordFocusNode,
       autofocus: false,
       obscureText: true,
       validator: (value) => value.isEmpty ? "Please enter password" : null,
@@ -39,7 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
     var loading = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        CircularProgressIndicator(),
+        SizedBox(
+          height: 20.0,
+          width: 20.0,
+          child: CircularProgressIndicator(),
+        ),
         Text(" Authenticating ... Please wait")
       ],
     );

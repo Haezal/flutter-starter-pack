@@ -14,6 +14,9 @@ enum Status {
 }
 
 class AuthProvider with ChangeNotifier {
+
+  AuthService authService = new AuthService();
+
   // initial declaration
   Status _loggedInStatus = Status.NotLoggedIn;
   Status _registeredInStatus = Status.NotRegistered;
@@ -34,38 +37,17 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     // calling webservices
-    // Api api = new Api();
-    // String endPoint = 'auth/login';
-    //
-    // final response = api.postAsync(endPoint, loginData);
-    var response;
-    if (username == 'test@test.com' && password == 'password') {
-      response = {
-        "success": true,
-        "message": "Login successfully!!",
-        "user": {
-          "user_id":"myUserId",
-          "name":"Examle User Fullname",
-          "email":"example@domain.com",
-          "token":"token",
-        },
-      };
-    }
-    else {
-      response = {
-        "success":false,
-        "message": 'Invalid username and password',
-      };
-    }
+    var response = await authService.login(loginData);
 
-
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (response['success'] == true) {
+    if (response['status'] == true) {
       _loggedInStatus = Status.LoggedIn;
       notifyListeners();
 
-      User authUser = User.fromJson(response['user']);
+      /// key data is come from backend data structure
+      /// is depend your data response
+      User authUser = User.fromJson(response['data']);
+
+      print(authUser.name);
 
       UserPreferences().saveUser(authUser);
 
