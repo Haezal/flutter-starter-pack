@@ -42,11 +42,15 @@ class _LoginScreenState extends State<LoginScreen> {
       obscureText: _obscureText,
       validator: (value) => value.isEmpty ? "Please enter password" : null,
       onSaved: (value) => _password = value,
-      decoration: buildInputDecoration("Confirm password", Icons.lock, new GestureDetector(
-          onTap: () {
-            setState(() => _obscureText = !_obscureText);
-          },
-          child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.blueAccent)),),
+      decoration: buildInputDecoration(
+        "Confirm password",
+        Icons.lock,
+        new GestureDetector(
+            onTap: () {
+              setState(() => _obscureText = !_obscureText);
+            },
+            child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.blueAccent)),
+      ),
     );
 
     var loading = Row(
@@ -67,8 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (form.validate()) {
         form.save();
 
-        final Future<Map<String, dynamic>> loginMessage =
-            auth.login(_username, _password);
+        final Future<Map<String, dynamic>> loginMessage = auth.login(_username, _password);
 
         loginMessage.then((response) {
           // login successful
@@ -76,11 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
             User user = response['user'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
             Navigator.pushReplacementNamed(context, '/main_screen');
-            Flushbar(
-              title: 'Success',
-              message: response['message'],
-              duration: Duration(seconds: 3),
-            ).show(context);
           } else {
             Flushbar(
               flushbarPosition: FlushbarPosition.BOTTOM,
@@ -100,8 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
               progressIndicatorBackgroundColor: Colors.blueGrey,
               titleText: Text(
                 "Login failed",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.red[600], fontFamily: "ShadowsIntoLightTwo"),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.red[600], fontFamily: "ShadowsIntoLightTwo"),
               ),
               messageText: Text(
                 response['message'],
@@ -127,8 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Visibility(
-                visible: Provider.of<DataConnectionStatus>(context) ==
-                    DataConnectionStatus.disconnected,
+                visible: Provider.of<DataConnectionStatus>(context) == DataConnectionStatus.disconnected,
                 child: InternetNotAvailable(),
               ),
               SizedBox(height: 15.0),
@@ -138,9 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
               label('Password'),
               passwordField,
               SizedBox(height: 15.0),
-              auth.loggedInStatus == Status.Authenticating
-                  ? loading
-                  : longButtons("Login", doLogin),
+              auth.loggedInStatus == Status.Authenticating ? loading : longButtons("Login", doLogin),
               SizedBox(height: 5.0),
             ],
           ),
