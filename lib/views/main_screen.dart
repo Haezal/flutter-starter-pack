@@ -1,30 +1,54 @@
-import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:starterpack/views/dashboard_screen.dart';
+import 'package:starterpack/views/login_screen.dart';
+import 'package:starterpack/views/welcome_screen.dart';
 
-import '../widgets/widgets.dart';
-
+/// This is the stateful widget that the main application instantiates.
 class MainScreen extends StatefulWidget {
+  MainScreen({Key key}) : super(key: key);
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
+/// This is the private State class that goes with MainScreen.
 class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  List<Widget> _widgetOptions = <Widget>[
+    WelcomeScreen(),
+    DashboardScreen(),
+    LoginScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Main Screen'),
-      ),
-      body: Column(
-        children: [
-          Visibility(
-              visible: Provider.of<DataConnectionStatus>(context) == DataConnectionStatus.disconnected,
-              child: InternetNotAvailable()),
-          Center(
-            child: Text('Content'),
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_active_outlined),
+            label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu),
+            label: 'Menu',
           ),
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue[800],
+        onTap: _onItemTapped,
       ),
     );
   }

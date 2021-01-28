@@ -48,10 +48,11 @@ class MyApp extends StatelessWidget {
                         return LoginScreen();
 
                       Provider.of<UserProvider>(context, listen: false).setUser(snapshot.data);
-                      return WelcomeScreen();
+                      return MainScreen();
                   }
                 }),
             routes: {
+              '/main_screen': (context) => MainScreen(),
               '/login': (context) => LoginScreen(),
               '/welcome': (context) => WelcomeScreen(),
             }),

@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode _usernameFocusNode, _passwordFocusNode = new FocusNode();
 
   String _username, _password;
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -26,22 +27,26 @@ class _LoginScreenState extends State<LoginScreen> {
     final usernameField = TextFormField(
       focusNode: _usernameFocusNode,
       autofocus: false,
-      // validator: validateEmail,
-      validator: (value) => value.isEmpty ? "Please enter username" : null,
+      validator: validateEmail,
+      // validator: (value) => value.isEmpty ? "Please enter email address" : null,
       onSaved: (value) => _username = value,
       onFieldSubmitted: (String value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
       },
-      decoration: buildInputDecoration("Confirm password", Icons.person),
+      decoration: buildInputDecoration("Confirm password", Icons.person, null),
     );
 
     final passwordField = TextFormField(
       focusNode: _passwordFocusNode,
       autofocus: false,
-      obscureText: true,
+      obscureText: _obscureText,
       validator: (value) => value.isEmpty ? "Please enter password" : null,
       onSaved: (value) => _password = value,
-      decoration: buildInputDecoration("Confirm password", Icons.lock),
+      decoration: buildInputDecoration("Confirm password", Icons.lock, new GestureDetector(
+          onTap: () {
+            setState(() => _obscureText = !_obscureText);
+          },
+          child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.blueAccent)),),
     );
 
     var loading = Row(
@@ -70,12 +75,38 @@ class _LoginScreenState extends State<LoginScreen> {
           if (response['success'] == true) {
             User user = response['user'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushReplacementNamed(context, '/welcome');
+            Navigator.pushReplacementNamed(context, '/main_screen');
+            Flushbar(
+              title: 'Success',
+              message: response['message'],
+              duration: Duration(seconds: 3),
+            ).show(context);
           } else {
             Flushbar(
-              title: "Failed Login",
-              message: response['message'].toString(),
+              flushbarPosition: FlushbarPosition.BOTTOM,
+              flushbarStyle: FlushbarStyle.FLOATING,
+              reverseAnimationCurve: Curves.decelerate,
+              forwardAnimationCurve: Curves.elasticOut,
+              backgroundColor: Colors.red,
+              boxShadows: [BoxShadow(color: Colors.blue[800], offset: Offset(0.0, 2.0), blurRadius: 3.0)],
+              backgroundGradient: LinearGradient(colors: [Colors.blueGrey, Colors.black]),
+              isDismissible: false,
               duration: Duration(seconds: 3),
+              icon: Icon(
+                Icons.cancel_outlined,
+                color: Colors.white,
+              ),
+              showProgressIndicator: false,
+              progressIndicatorBackgroundColor: Colors.blueGrey,
+              titleText: Text(
+                "Login failed",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.red[600], fontFamily: "ShadowsIntoLightTwo"),
+              ),
+              messageText: Text(
+                response['message'],
+                style: TextStyle(fontSize: 18.0, color: Colors.white, fontFamily: "ShadowsIntoLightTwo"),
+              ),
             ).show(context);
           }
         });
