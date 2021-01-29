@@ -68,7 +68,6 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> logout() async {
     UserPreferences().removeUser();
-
     return true;
   }
 }

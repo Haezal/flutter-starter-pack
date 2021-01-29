@@ -37,15 +37,12 @@ class MyApp extends StatelessWidget {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                     case ConnectionState.none:
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return SplashScreen();
                       break;
                     default:
                       if (snapshot.hasError)
                         return Center(child: Text('Error: ${snapshot.error}'));
-                      else if (snapshot.data.token == null)
-                        return LoginScreen();
+                      else if (snapshot.data.token == null) return LoginScreen();
 
                       Provider.of<UserProvider>(context, listen: false).setUser(snapshot.data);
                       return MainScreen();
