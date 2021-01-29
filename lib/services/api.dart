@@ -20,10 +20,11 @@ class Api {
       String url = baseUrl + endPoint;
       print('URL : ' + url);
       final response = await http.get(url, headers: headers);
+      var jsonMap = json.decode(response.body);
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        return jsonMap;
       } else {
-        throw Exception('${response.statusCode} : Error occurred during calling web service');
+        throw Exception('${response.statusCode} : ' + jsonMap['message']);
       }
     } on TimeoutException catch (e) {
       throw TimeoutException('Timeout exception : $endPoint');
@@ -43,10 +44,11 @@ class Api {
       print('URL : ' + url);
       final response = await http.post(url, body: json.encode(body), headers: headers);
 
+      var jsonMap = json.decode(response.body);
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        return jsonMap;
       } else {
-        throw Exception('${response.statusCode} : Error occurred during calling web service');
+        throw Exception('${response.statusCode} : ' + jsonMap['message']);
       }
     } on TimeoutException catch (e) {
       throw TimeoutException('Timeout exception : $endPoint');

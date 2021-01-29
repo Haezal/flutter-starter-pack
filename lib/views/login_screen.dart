@@ -70,43 +70,73 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (form.validate()) {
         form.save();
+        try
+        {
+          final Future<Map<String, dynamic>> loginMessage = auth.login(_username, _password);
+          loginMessage.then((response) {
+            // login successful
+            if (response['success'] == true) {
+              User user = response['user'];
+              Provider.of<UserProvider>(context, listen: false).setUser(user);
+              Navigator.pushReplacementNamed(context, '/main_screen');
+            } else {
+              Flushbar(
+                flushbarPosition: FlushbarPosition.BOTTOM,
+                flushbarStyle: FlushbarStyle.FLOATING,
+                reverseAnimationCurve: Curves.decelerate,
+                forwardAnimationCurve: Curves.elasticOut,
+                backgroundColor: Colors.red,
+                boxShadows: [BoxShadow(color: Colors.blue[800], offset: Offset(0.0, 2.0), blurRadius: 3.0)],
+                backgroundGradient: LinearGradient(colors: [Colors.blueGrey, Colors.black]),
+                isDismissible: false,
+                duration: Duration(seconds: 3),
+                icon: Icon(
+                  Icons.cancel_outlined,
+                  color: Colors.white,
+                ),
+                showProgressIndicator: false,
+                progressIndicatorBackgroundColor: Colors.blueGrey,
+                titleText: Text(
+                  "Login failed",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.red[600], fontFamily: "ShadowsIntoLightTwo"),
+                ),
+                messageText: Text(
+                  response['message'],
+                  style: TextStyle(fontSize: 18.0, color: Colors.white, fontFamily: "ShadowsIntoLightTwo"),
+                ),
+              ).show(context);
+            }
+          });
+        }catch (e) {
+          Flushbar(
+            flushbarPosition: FlushbarPosition.BOTTOM,
+            flushbarStyle: FlushbarStyle.FLOATING,
+            reverseAnimationCurve: Curves.decelerate,
+            forwardAnimationCurve: Curves.elasticOut,
+            backgroundColor: Colors.red,
+            boxShadows: [BoxShadow(color: Colors.blue[800], offset: Offset(0.0, 2.0), blurRadius: 3.0)],
+            backgroundGradient: LinearGradient(colors: [Colors.blueGrey, Colors.black]),
+            isDismissible: false,
+            duration: Duration(seconds: 3),
+            icon: Icon(
+              Icons.cancel_outlined,
+              color: Colors.white,
+            ),
+            showProgressIndicator: false,
+            progressIndicatorBackgroundColor: Colors.blueGrey,
+            titleText: Text(
+              "Exception",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.red[600], fontFamily: "ShadowsIntoLightTwo"),
+            ),
+            messageText: Text(
+              e.toString(),
+              style: TextStyle(fontSize: 18.0, color: Colors.white, fontFamily: "ShadowsIntoLightTwo"),
+            ),
+          ).show(context);
+        }
 
-        final Future<Map<String, dynamic>> loginMessage = auth.login(_username, _password);
 
-        loginMessage.then((response) {
-          // login successful
-          if (response['success'] == true) {
-            User user = response['user'];
-            Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushReplacementNamed(context, '/main_screen');
-          } else {
-            Flushbar(
-              flushbarPosition: FlushbarPosition.BOTTOM,
-              flushbarStyle: FlushbarStyle.FLOATING,
-              reverseAnimationCurve: Curves.decelerate,
-              forwardAnimationCurve: Curves.elasticOut,
-              backgroundColor: Colors.red,
-              boxShadows: [BoxShadow(color: Colors.blue[800], offset: Offset(0.0, 2.0), blurRadius: 3.0)],
-              backgroundGradient: LinearGradient(colors: [Colors.blueGrey, Colors.black]),
-              isDismissible: false,
-              duration: Duration(seconds: 3),
-              icon: Icon(
-                Icons.cancel_outlined,
-                color: Colors.white,
-              ),
-              showProgressIndicator: false,
-              progressIndicatorBackgroundColor: Colors.blueGrey,
-              titleText: Text(
-                "Login failed",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.red[600], fontFamily: "ShadowsIntoLightTwo"),
-              ),
-              messageText: Text(
-                response['message'],
-                style: TextStyle(fontSize: 18.0, color: Colors.white, fontFamily: "ShadowsIntoLightTwo"),
-              ),
-            ).show(context);
-          }
-        });
+
       } else {
         print('Form is invalid');
       }

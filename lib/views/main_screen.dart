@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:starterpack/views/dashboard_screen.dart';
-import 'package:starterpack/views/login_screen.dart';
-import 'package:starterpack/views/welcome_screen.dart';
+import 'package:starterpack/views/views.dart';
 
 /// This is the stateful widget that the main application instantiates.
 class MainScreen extends StatefulWidget {
@@ -17,8 +15,8 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Widget> _widgetOptions = <Widget>[
     WelcomeScreen(),
-    DashboardScreen(),
-    LoginScreen(),
+    NotificationsScreen(),
+    MenuScreen(),
   ];
 
   void _onItemTapped(int index) {
