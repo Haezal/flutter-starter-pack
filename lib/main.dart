@@ -31,27 +31,11 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.blue,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            home: FutureBuilder(
-                future: getUserData,
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                    case ConnectionState.none:
-                      return SplashScreen();
-                      break;
-                    default:
-                      if (snapshot.hasError)
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      else if (snapshot.data.token == null) return LoginScreen();
-
-                      Provider.of<UserProvider>(context, listen: false).setUser(snapshot.data);
-                      return MainScreen();
-                  }
-                }),
+            home: SplashScreen(),
             routes: {
               '/main_screen': (context) => MainScreen(),
               '/login': (context) => LoginScreen(),
-              '/welcome': (context) => WelcomeScreen(),
+              '/welcome': (context) => HomeScreen(),
             }),
       );
     });

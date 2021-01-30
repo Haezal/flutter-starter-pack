@@ -3,9 +3,9 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/models.dart';
-import '../providers/providers.dart';
-import '../widgets/widgets.dart';
+import '../../models/models.dart';
+import '../../providers/providers.dart';
+import '../../widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -70,8 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (form.validate()) {
         form.save();
-        try
-        {
+        try {
           final Future<Map<String, dynamic>> loginMessage = auth.login(_username, _password);
           loginMessage.then((response) {
             // login successful
@@ -107,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ).show(context);
             }
           });
-        }catch (e) {
+        } catch (e) {
           Flushbar(
             flushbarPosition: FlushbarPosition.BOTTOM,
             flushbarStyle: FlushbarStyle.FLOATING,
@@ -134,9 +133,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ).show(context);
         }
-
-
-
       } else {
         print('Form is invalid');
       }

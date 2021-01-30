@@ -14,7 +14,8 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   List<Widget> _widgetOptions = <Widget>[
-    WelcomeScreen(),
+    HomeScreen(),
+    SearchScreen(),
     NotificationsScreen(),
     MenuScreen(),
   ];
@@ -36,6 +37,10 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.notifications_active_outlined),
             label: 'Notifications',
           ),
@@ -44,6 +49,7 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Menu',
           ),
         ],
+        unselectedItemColor: Colors.grey,
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue[800],
         onTap: _onItemTapped,
